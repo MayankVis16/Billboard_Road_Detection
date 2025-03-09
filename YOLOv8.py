@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 # Define paths
 data_yaml_path = "C:\\Users\\Mayank Sharma\\OneDrive\\Desktop\\Data Detect\\dataset\\data.yaml"
 trained_model_path = "runs/detect/train16/weights/best.pt"
-input_image_path = "C:\\Users\\Mayank Sharma\\OneDrive\\Desktop\\Data Detect\\img52.jpg"
+input_image_path = "C:\\Users\\Mayank Sharma\\OneDrive\\Desktop\\Data Detect\\input.jpg"
 output_image_path = "C:\\Users\\Mayank Sharma\\OneDrive\\Desktop\\Data Detect\\output.jpg"
 
 def train_model():
@@ -34,4 +34,4 @@ def run_inference():
 
 if __name__ == "__main__":
     train_model()  # Train the model
-    run_inference()  # Run inference on img52.jpg
+    run_inference()  # Run inference on input.jpg
