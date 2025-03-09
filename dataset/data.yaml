@@ -1,0 +1,13 @@
+train: C:/Users/Mayank Sharma/OneDrive/Desktop/Data Detect/dataset/train/images
+val: C:/Users/Mayank Sharma/OneDrive/Desktop/Data Detect/dataset/valid/images
+test: C:/Users/Mayank Sharma/OneDrive/Desktop/Data Detect/dataset/test/images
+
+nc: 8
+names: ['Billboard_LHS', 'Billboard_RHS', 'Billboard_overhead', 'Billboard_overhead_small', 'Billboard_small', 'Billboards', 'Roadcorner', 'Roadlane']
+
+roboflow:
+  workspace: billboarddetect
+  project: billboard_detection-rtgql
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/billboarddetect/billboard_detection-rtgql/dataset/1
