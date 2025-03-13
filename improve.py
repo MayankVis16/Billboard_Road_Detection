@@ -42,7 +42,7 @@ def detect_corners(image):
     """Detect road corners using Shi-Tomasi."""
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     corners = cv2.goodFeaturesToTrack(gray, 100, 0.01, 10)
-    return np.int0(corners) if corners is not None else []
+    return np.int64(corners) if corners is not None else []
 
 def detect_billboards_yolo(image, conf_threshold=0.5):
     """Detect billboards using YOLOv8 with a confidence threshold."""
@@ -152,16 +152,18 @@ def calculate_setback_distance(bbox, corners):
     return min_distance
 
 def detect_non_billboard_objects(image):
-    """Detect occluding objects like buildings using YOLOv8."""
+    """Detect non-billboard objects like buildings using YOLOv8."""
     results = model(image)
     non_billboard_objects = []
     
     for r in results:
         for box, conf, cls in zip(r.boxes.xyxy.cpu().numpy(), r.boxes.conf.cpu().numpy(), r.boxes.cls.cpu().numpy()):
-            class_name = model.names[int(cls)]  # Get object class label
-            if conf >= 0.5 and class_name in ["building", "tree", "pole"]:
-                x_min, y_min, x_max, y_max = map(int, box)
-                non_billboard_objects.append((x_min, y_min, x_max, y_max))
+            class_index = int(cls)
+            class_name = r.names.get(class_index, "unknown")  # Get class name safely
+            if conf >= 0.5 and class_name.lower() != 'billboard':  # Ensure case consistency
+                x_min, y_min, x_max, y_max = box
+                non_billboard_objects.append((int(x_min), int(y_min), int(x_max), int(y_max)))
+    
     return non_billboard_objects
 
 def main(image_path):
@@ -218,9 +220,12 @@ def main(image_path):
               f"Angle: {angle:.2f}°, "
               f"Setback Distance: {setback_distance:.2f} pixels")
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Detect billboards and lanes from an image.")
-    parser.add_argument("image_path", type=str, help="Path to the input image")
+    parser.add_argument("--image_path", type=str, default=r"C:\Users\Mayank Sharma\OneDrive\Desktop\Data Detect\img52.jpg", 
+                        help="Path to the input image")
     args = parser.parse_args()
     
     main(args.image_path)
+
