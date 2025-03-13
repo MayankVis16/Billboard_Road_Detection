@@ -1,4 +1,4 @@
- import cv2
+import cv2
 import numpy as np
 from ultralytics import YOLO
 from sklearn.cluster import DBSCAN
