@@ -152,15 +152,16 @@ def calculate_setback_distance(bbox, corners):
     return min_distance
 
 def detect_non_billboard_objects(image):
-    """Detect non-billboard objects like buildings using YOLOv8."""
+    """Detect occluding objects like buildings using YOLOv8."""
     results = model(image)
     non_billboard_objects = []
     
     for r in results:
-        for box, conf in zip(r.boxes.xyxy.cpu().numpy(), r.boxes.conf.cpu().numpy()):
-            if conf >= 0.5 and r.names[int(box[-1])] != 'billboard':
-                x_min, y_min, x_max, y_max = box
-                non_billboard_objects.append((int(x_min), int(y_min), int(x_max), int(y_max)))
+        for box, conf, cls in zip(r.boxes.xyxy.cpu().numpy(), r.boxes.conf.cpu().numpy(), r.boxes.cls.cpu().numpy()):
+            class_name = model.names[int(cls)]  # Get object class label
+            if conf >= 0.5 and class_name in ["building", "tree", "pole"]:
+                x_min, y_min, x_max, y_max = map(int, box)
+                non_billboard_objects.append((x_min, y_min, x_max, y_max))
     return non_billboard_objects
 
 def main(image_path):
